@@ -1,77 +1,22 @@
-# 📖 Minimalist Book Manager API
+# Building and Deploying a JavaScript API with Docker
 
 ## Introduction
-This is a starter repository for the Minimalist Book Manager API demonstrating basic use of swagger-ui-express and swagger-jsdoc to produce Swagger API documentation.
+This repository is designed to guide you through containerising a JavaScript Express API using [Docker](https://www.docker.com/).
+
+It also covers instructions for deploying your containerised application to Amazon Web Services.
+
+The application itself is a sample JavaScript ExpressJS API that allows users to manage books.
+
+If you have created your own JavaScript ExpressJS API, the instructions here can also be utilised to containerise and deploy your own application 🙌
 
 ### Pre-Requisites
-- NodeJS installed (v14.18.1 Long Term Support version at time of writing)
+- Node (version 16.13.0 is LTS version at time of writing)
 
-### Technologies & Dependencies
+For deployment you'll also need:
 
-- [ExpressJS](https://expressjs.com/)
-- [Sequelize](https://sequelize.org/)
-- [SQLite3](https://www.npmjs.com/package/sqlite3)
-- [MySQL2](https://www.npmjs.com/package/mysql2)
-- [Dotenv](https://www.npmjs.com/package/dotenv)
-- [Jest](https://jestjs.io/)
-- [Supertest](https://www.npmjs.com/package/supertest)
-- [ESLint](https://eslint.org/)
-- [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)
-- [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)
-- [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc)
+- An Amazon AWS account
 
-### How to Get Started
+## How to Get Started
 
-- Fork this repo to your Github and then clone the forked version of this repo
-
-### Running the application
-
-In order to run the application, firstly install the dependencies (if you haven't already done so)
-
-```
-npm install
-```
-
-Next, create a `.env.dev` configuration file in the root of your repository with the settings you'd like to run the application against for the development environment.
-You can utilise the same settings specified in `.env` if you wish.
-
-To run the application against different environments, please create a `.env.test` and a `.env.prod` in the root of the repository to specify configuration for these environments.
-
-
-You can then add a new script to the scripts section of the `package.json` to run the script for your specific environment. For example, the script below will enable you to run against the production configuration.
-
-```JavaScript
-"scripts": {
-  "start": "node src/server.js",
-  "start-prod": "NODE_ENV=prod node src/server.js",
-  "test": "jest"
-},
-```
-
-To setup the "start-prod" in the package.json for Windows OS, you may need to set it like this:
-
-```JavaScript
-
-"start-prod": "set NODE_ENV=prod&& node src/server.js"
-
-```
-
-```
-
-npm start-prod
-
-```
-
-### Running the Unit Tests
-
-In order to run the unit tests run, firstly install the dependencies (if you haven't already done so)
-
-```
-npm install
-```
-
-Followed by:
-
-```
-npm test
-```
+1. Fork this repo to your Github and then clone the forked version of this repo
+2. Work through the activities in the activities folder starting with [Activity 1](./activities/activity_1.md).
