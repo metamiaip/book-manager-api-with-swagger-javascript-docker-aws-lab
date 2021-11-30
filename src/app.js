@@ -31,6 +31,11 @@ app.use(
 
 app.use(express.json());
 
+// Health endpoint
+app.get('/',(req, res) => {
+  res.status(200).json({status: "HEALTHY"});
+});
+
 app.use('/api/v1', routes);
 
 module.exports = app;
