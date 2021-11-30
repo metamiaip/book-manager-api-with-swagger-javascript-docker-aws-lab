@@ -14,7 +14,7 @@ The Dockerfile looks like this:
 # Utilising Docker multistage builds
 # Part 1 use the node base image to produce
 # the build of the application
-FROM node:16.13.0 AS appbuild
+FROM node:16.13.0
 WORKDIR /app
 COPY package.json .
 COPY swagger.yaml .
@@ -24,13 +24,13 @@ RUN npm install --production
 # Part 2
 # This build takes the built code from part 1
 # And executes it to start the application
-FROM node:16.13-bullseye-slim AS prod
+FROM node:16.13
 USER node
 RUN mkdir /home/node/app
 WORKDIR /home/node/app
-COPY --from=appbuild --chown=node:node /app .
-EXPOSE ${PORT}
-CMD ["npm", "start"]
+COPY --from=0 --chown=node:node /app .
+EXPOSE 3000
+ENTRYPOINT ["npm", "start"]
 ```
 - What do you think might be happening in the first line of that Dockerfile?
 
@@ -45,7 +45,7 @@ We can create Docker images that build upon previous layers.
 The first line of this particular Dockerfile tells Docker build 
 on a Node image provided on the [DockerHub](https://hub.docker.com/_/node) by NodeJS.
 
-That particular image makes sure the version 16.13.0 of the 
+That particular image makes sure the version 16.13 of  
 Node is present.
 
 </pre>
@@ -57,7 +57,7 @@ The Docker hub is a public site where you can publish Docker images. You can mak
 
 Very similar to the Node dependencies you've got in your code. Those Node dependencies get pulled from the [npmjs.com][https://npmjs.com] servers. 
 
-Well in Docker that image (`node:16.13.0`) we've "based" our Dockerfile from, gets "pulled" from the Docker Hub.
+Well in Docker that image (`node:16.13`) we've "based" our Dockerfile from, gets "pulled" from the Docker Hub.
 
 In container talk, the Docker Hub is known as a **Container Registry** but more on that later...
 
@@ -89,22 +89,20 @@ It allows us to use both Docker to build the application and then also to run it
 Part 2 of the dockerfile is for running the application
 
 ```dockerfile
-FROM node:16.13-bullseye-slim AS prod
+FROM node:16.13
 USER node
 RUN mkdir /home/node/app
 WORKDIR /home/node/app
-COPY --from=appbuild --chown=node:node /app .
-EXPOSE ${PORT}
-CMD ["npm", "start"]
+COPY --from=0 --chown=node:node /app .
+EXPOSE 3000
+ENTRYPOINT ["npm", "start"]
 ```
 
-Firstly we use a slightly different base image:
+Firstly we use define our base image again:
 
 ```dockerfile
-FROM node:16.13-bullseye-slim AS prod
+FROM node:16.13
 ```
-
-This is so that we have a slightly smaller container image when running the application.
 
 Then we make sure that any subsequent commands are executed using the **node** user. This is a security enhancement. By default docker commands are run as "root" unless explicitly told otherwise. If we ran the application as root then we could be exposing ourselves to a user gaining root access to the container. So we use the `USER` docker command to specify that we are using the **node** user for all subsequent commands:
 
@@ -112,20 +110,18 @@ Then we make sure that any subsequent commands are executed using the **node** u
 USER node
 ```
 
-The next 3 lines create a new directory, then setup the `WORKDIR` command to essentially say this is the directory I want to change to for all subsequent commands before finally doing the smart part which is to take the code produced by the first page of the multi-stage build and copy it into this container:
+The next 3 lines create a new directory, then setup the `WORKDIR` command to essentially say this is the directory I want to change to for all subsequent commands before finally doing the smart part which is to take the code produced by the first part of the multi-stage build and copy it into this container:
 
 ```dockerfile
 RUN mkdir /home/node/app
 WORKDIR /home/node/app
-COPY --from=appbuild --chown=node:node /app .
+COPY --from=0 --chown=node:node /app .
 ```
 
-Finally we define which port the application will expose before starting the application. 
-
-This syntax using the `${PORT}` approach is environment variables in Docker. We'll be extracting that PORT from the **.env** file.
+Finally we define which port the application will expose before starting the application. In our case we'll expose port 3000.
 
 ```dockerfile
-EXPOSE ${PORT}
+EXPOSE 3000
 ```
 
 Then the final line is the powerful one. An `ENTRYPOINT` instruction tells Docker what command should be executed when starting the container.
