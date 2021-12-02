@@ -1,7 +1,7 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../database');
 
-const Book = sequelize.define('Book', {
+const Book = sequelize.define('Books', {
   // Model attributes are defined here
   bookId: {
     type: DataTypes.INTEGER,
@@ -17,7 +17,8 @@ const Book = sequelize.define('Book', {
     allowNull: false,
   },
 }, {
-  modelName: 'Book',
+  timestamps: false,
+  modelName: 'Books',
 });
 
 module.exports = Book;
